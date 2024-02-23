@@ -1,73 +1,154 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
+# Vehicle Fleet Management API
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
+# clone
+$ git clone https://github.com/Samir984/fleet-management-system.git
 
-# watch mode
-$ npm run start:dev
+$ cd fleet-management-system/
 
-# production mode
-$ npm run start:prod
+# dev mode
+$ npm run  start:dev
 ```
 
-## Test
+# Test the Endpoints
+
+### Base URL: http://localhost:3000/
+
+## 1. Register a User
+
+#### Endpoint: POST &nbsp;&nbsp;[localhost]/api/users/register
+
+**Example Request:**
 
 ```bash
-# unit tests
-$ npm run test
+{
+  "fullName": "admin_name",
+  "email":"admin_id@gmail.com",
+  "password": "admin_password"
+}
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+## 2. login User
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Endpoint: POST &nbsp;&nbsp;[localhost]/api/users/login
 
-## Stay in touch
+**Example Request:**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+{
+  "email":"admin_id@gmail.com",
+  "password": "admin_password"
+}
 
-## License
+```
 
-Nest is [MIT licensed](LICENSE).
+<br>
+<br>
+
+# From Now, for any subsequent request ,ADD
+
+<h1 style="color:red">
+Authorization: Bearer [token]
+</h1>
+
+<br>
+
+# Vechicle End point:
+
+## 1. Creating a new vehicle
+
+#### Endpoint: POST &nbsp;&nbsp;[localhost]/api/vehicles/
+
+**Example Request:**
+
+```bash
+{
+  "make": "Toyota",
+  "model": "Camry",
+  "year": 2022,
+  "registrationNumber": "ABC984",
+  "currentStatus": "active",
+  "location": "Garage",
+  "maintenanceTask": [
+    {
+      "date": "2022-02-23T00:00:00.000Z",
+      "description": "Oil Change"
+    },
+    {
+      "date": "2022-02-24T00:00:00.000Z",
+      "description": "Tire Rotation"
+    }
+  ],
+  "assignedDriver": "some_driver_id"
+}
+
+```
+
+<br>
+
+## 2. Retrieving a single vehicle by ID
+
+#### Endpoint: GET &nbsp;&nbsp;[localhost]/api/vehicles/[:id]
+
+<br>
+
+## 3. Listing all vehicles
+
+#### Endpoint: GET &nbsp;&nbsp;[localhost]/api/vehicles/
+
+<br>
+
+## 4. deleting a vehicle
+
+#### Endpoint: DELETE &nbsp;&nbsp;[localhost]/api/vehicles/[:id]
+
+<br>
+
+## 5. Updating an existing vehicle
+
+#### Endpoint: PATCH &nbsp;&nbsp;[localhost]/api/vehicles/[:id]
+
+**Example Request:**
+
+```bash
+{
+    "currentStatus": "under maintenance",
+}
+```
+
+<br>
+<br>
+
+# Functionality Endpoint
+
+## 1. Endpoints for assigning drivers
+
+#### Endpoint: PATCH &nbsp;&nbsp;[localhost]/vehicles/[:id]/assign-driver
+
+**Example Request:**
+
+```bash
+{
+  "assignedDriver": "driver1234"
+}
+
+```
+
+<br>
+
+## 2. Managing maintenance tasks for each vehicle.
+
+#### Endpoint: PATCH &nbsp;&nbsp;[localhost]/vehicles/[:id]/maintenance-task
+
+**Example Request:**
+
+```bash
+{
+ "date": "2022-02-12",
+ "description": "sa ir Change"
+}
+
+```
