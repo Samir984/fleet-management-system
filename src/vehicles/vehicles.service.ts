@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vehicle } from 'src/schemas/vehicle.schema';
@@ -9,39 +9,48 @@ export class VehicleService {
     @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
   ) {}
 
-  async create(vehicle: Vehicle): Promise<Vehicle> {
+  async listNewVehicle(vehicle: Vehicle): Promise<Vehicle> {
     const createdVehicle = new this.vehicleModel(vehicle);
     return createdVehicle.save();
   }
 
-  async findAll(): Promise<Vehicle[]> {
+  async listAllVehicle(): Promise<Vehicle[]> {
     return this.vehicleModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Vehicle | null> {
+  async getVehicle(id: string): Promise<Vehicle | null> {
     return this.vehicleModel.findById(id).exec();
   }
 
-  async update(id: string, updates: Partial<Vehicle>): Promise<Vehicle | null> {
+  async updateVehicle(
+    id: string,
+    updates: Partial<Vehicle>,
+  ): Promise<Vehicle | null> {
     return this.vehicleModel
       .findByIdAndUpdate(id, updates, { new: true })
       .exec();
   }
 
-  async remove(id: string): Promise<Vehicle | null> {
-    return this.vehicleModel.findByIdAndDelete(id).exec();
-  }
+  async deleteListedVehicle(id: string): Promise<Vehicle | null> {
+    const deletedVehicle = await this.vehicleModel.findByIdAndDelete(id).exec();
 
-  async markStatus(id: string, status: string): Promise<Vehicle | null> {
-    return this.vehicleModel
-      .findByIdAndUpdate(id, { currentStatus: status }, { new: true })
-      .exec();
+    if (!deletedVehicle) {
+      throw new NotFoundException(`Vehicle with ID ${id} not found`);
+    }
+
+    return deletedVehicle;
   }
 
   async assignDriver(id: string, driverId: string): Promise<Vehicle | null> {
-    return this.vehicleModel
-      .findByIdAndUpdate(id, { assignedDriver: driverId }, { new: true })
+    const updatedVehicle = await this.vehicleModel
+      .findByIdAndUpdate(
+        id,
+        { $set: { assignedDriver: driverId } },
+        { new: true, upsert: true },
+      )
       .exec();
+
+    return updatedVehicle;
   }
 
   async addMaintenanceTask(

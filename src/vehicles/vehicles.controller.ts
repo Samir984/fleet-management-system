@@ -32,9 +32,9 @@ export class VehicleController {
   }
 
   @Post()
-  async create(@Body() vehicle: Vehicle) {
+  async listNewVehicle(@Body() vehicle: Vehicle) {
     try {
-      const createdVehicle = await this.vehicleService.create(vehicle);
+      const createdVehicle = await this.vehicleService.listNewVehicle(vehicle);
       return this.successResponse(createdVehicle);
     } catch (error) {
       return this.errorResponse(error.message);
@@ -42,9 +42,9 @@ export class VehicleController {
   }
 
   @Get()
-  async findAll() {
+  async listAllVehicle() {
     try {
-      const vehicles = await this.vehicleService.findAll();
+      const vehicles = await this.vehicleService.listAllVehicle();
       return this.successResponse(vehicles);
     } catch (error) {
       return this.errorResponse(error.message);
@@ -52,9 +52,9 @@ export class VehicleController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async getVehicle(@Param('id') id: string) {
     try {
-      const vehicle = await this.vehicleService.findOne(id);
+      const vehicle = await this.vehicleService.getVehicle(id);
       return this.successResponse(vehicle);
     } catch (error) {
       return this.errorResponse(error.message);
@@ -62,9 +62,15 @@ export class VehicleController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updates: Partial<Vehicle>) {
+  async updateVehicle(
+    @Param('id') id: string,
+    @Body() updates: Partial<Vehicle>,
+  ) {
     try {
-      const updatedVehicle = await this.vehicleService.update(id, updates);
+      const updatedVehicle = await this.vehicleService.updateVehicle(
+        id,
+        updates,
+      );
       return this.successResponse(updatedVehicle);
     } catch (error) {
       return this.errorResponse(error.message);
@@ -72,20 +78,10 @@ export class VehicleController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async deleteListedVehicle(@Param('id') id: string) {
     try {
-      const removedVehicle = await this.vehicleService.remove(id);
+      const removedVehicle = await this.vehicleService.deleteListedVehicle(id);
       return this.successResponse(removedVehicle);
-    } catch (error) {
-      return this.errorResponse(error.message);
-    }
-  }
-
-  @Patch(':id/status')
-  async markStatus(@Param('id') id: string, @Body('status') status: string) {
-    try {
-      const updatedVehicle = await this.vehicleService.markStatus(id, status);
-      return this.successResponse(updatedVehicle);
     } catch (error) {
       return this.errorResponse(error.message);
     }
@@ -94,7 +90,7 @@ export class VehicleController {
   @Patch(':id/assign-driver')
   async assignDriver(
     @Param('id') id: string,
-    @Body('driverId') driverId: string,
+    @Body('assignedDriver') driverId: string,
   ) {
     try {
       const updatedVehicle = await this.vehicleService.assignDriver(
@@ -107,7 +103,7 @@ export class VehicleController {
     }
   }
 
-  @Post(':id/maintenance-task')
+  @Patch(':id/maintenance-task')
   async addMaintenanceTask(
     @Param('id') id: string,
     @Body() task: { date: Date; description: string },
