@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Injectable,
   ConflictException,
@@ -16,21 +17,24 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
-  async register(createUserDto: CreateUserDto): Promise<{ user: User }> {
+  async register(createUserDto: CreateUserDto) {
     const { email } = createUserDto;
 
     const existingUser = await this.userModel.findOne({ email }).exec();
-    console.log(existingUser);
+
     if (existingUser) {
       throw new ConflictException('Email is already in use');
     }
-    console.log(createUserDto);
+
     const user = await this.userModel.create(createUserDto);
 
-    return { user };
+    // Exclude the password field from the response
+    const { password, ...userWithoutPassword } = user.toObject();
+
+    return { user: userWithoutPassword };
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+  async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
 
     const user = await this.userModel.findOne({ email }).exec();
