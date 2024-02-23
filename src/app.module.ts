@@ -9,5 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     ),
     VehiclesModule,
   ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
