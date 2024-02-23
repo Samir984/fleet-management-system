@@ -77,4 +77,46 @@ export class VehicleController {
       return this.errorResponse(error.message);
     }
   }
+
+  @Patch(':id/status')
+  async markStatus(@Param('id') id: string, @Body('status') status: string) {
+    try {
+      const updatedVehicle = await this.vehicleService.markStatus(id, status);
+      return this.successResponse(updatedVehicle);
+    } catch (error) {
+      return this.errorResponse(error.message);
+    }
+  }
+
+  @Patch(':id/assign-driver')
+  async assignDriver(
+    @Param('id') id: string,
+    @Body('driverId') driverId: string,
+  ) {
+    try {
+      const updatedVehicle = await this.vehicleService.assignDriver(
+        id,
+        driverId,
+      );
+      return this.successResponse(updatedVehicle);
+    } catch (error) {
+      return this.errorResponse(error.message);
+    }
+  }
+
+  @Post(':id/maintenance-task')
+  async addMaintenanceTask(
+    @Param('id') id: string,
+    @Body() task: { date: Date; description: string },
+  ) {
+    try {
+      const updatedVehicle = await this.vehicleService.addMaintenanceTask(
+        id,
+        task,
+      );
+      return this.successResponse(updatedVehicle);
+    } catch (error) {
+      return this.errorResponse(error.message);
+    }
+  }
 }

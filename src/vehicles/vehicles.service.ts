@@ -31,4 +31,29 @@ export class VehicleService {
   async remove(id: string): Promise<Vehicle | null> {
     return this.vehicleModel.findByIdAndDelete(id).exec();
   }
+
+  async markStatus(id: string, status: string): Promise<Vehicle | null> {
+    return this.vehicleModel
+      .findByIdAndUpdate(id, { currentStatus: status }, { new: true })
+      .exec();
+  }
+
+  async assignDriver(id: string, driverId: string): Promise<Vehicle | null> {
+    return this.vehicleModel
+      .findByIdAndUpdate(id, { assignedDriver: driverId }, { new: true })
+      .exec();
+  }
+
+  async addMaintenanceTask(
+    id: string,
+    task: { date: Date; description: string },
+  ): Promise<Vehicle | null> {
+    return this.vehicleModel
+      .findByIdAndUpdate(
+        id,
+        { $push: { maintenanceTask: task } },
+        { new: true },
+      )
+      .exec();
+  }
 }
